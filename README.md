@@ -1,4 +1,4 @@
-!!!! THIS PROJECT IS **STILL ACTIVE** - I AM JUST TAKING A SMALL BREAK !!!!!
+!!!! THIS PROJECT IS **STILL ACTIVE** - I AM JUST TAKING A SMALL BREAK !!!!
 
 # zodiac
 A frontend built to interface with Google's Gemini Pro, built with vanilla JS. Get your API key here: [Google AI Suite](https://makersuite.google.com/app/apikey)
@@ -30,6 +30,15 @@ agent.addTool("Tool Name");
 agent.addSkill("Skill Name");
 ```
 
+### Removing and Updating Tools and Skills
+You can remove and update tools and skills using the `removeTool`, `removeSkill`, `updateTool`, and `updateSkill` methods:
+```javascript
+agent.removeTool("Tool Name");
+agent.removeSkill("Skill Name");
+agent.updateTool("Old Tool Name", "New Tool");
+agent.updateSkill("Old Skill Name", "New Skill");
+```
+
 ### Interacting with Agents
 Agents can interact with messages using the `interact` method:
 ```javascript
@@ -38,7 +47,22 @@ console.log(response);
 ```
 
 ## Managing Tools and Skills
-You can manage tools and skills for agents through the UI. Use the "Add Tool" and "Add Skill" buttons to add new tools and skills.
+You can manage tools and skills for agents through the UI. Use the "Add Tool" and "Add Skill" buttons to add new tools and skills. You can also edit and remove tools and skills using the respective buttons.
+
+## Saving and Loading Agentic Frameworks
+You can save and load agentic frameworks to and from local storage. This ensures that your frameworks persist across sessions.
+
+### Saving an Agentic Framework
+To save an agentic framework, use the `saveAgenticFramework` function:
+```javascript
+saveAgenticFramework(agent);
+```
+
+### Loading Agentic Frameworks
+To load agentic frameworks, use the `loadAgenticFrameworks` function:
+```javascript
+const frameworks = loadAgenticFrameworks();
+```
 
 ## Examples of Multi-Agent Workflows
 Here are some examples of how you can use multi-agent workflows:
@@ -76,6 +100,12 @@ const response3 = agent3.interact(response2);
 
 console.log(response3);
 ```
+
+## Screenshots
+Here are some screenshots of the updated UI:
+
+![image](https://github.com/faetalize/zodiac/assets/134988598/914ff978-2611-4e9f-b00f-55966b238dcb)
+![image](https://github.com/faetalize/zodiac/assets/134988598/914ff978-2611-4e9f-b00f-55966b238dcb)
 
 ## Sponsor my development
 You may support me finantially here: [LiberaPay](https://liberapay.com/faetalize) or [Patreon](https://patreon.com/faetalize)

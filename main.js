@@ -284,102 +284,117 @@ class Agent {
         this.skills.push(skill);
     }
 
-    interact(message) {
-        class Agent {
-            constructor(name, tools = [], skills = []) {
-                this.name = name;
-                this.tools = tools;
-                this.skills = skills;
-            }
-        
-            addTool(tool) {
-                this.tools.push(tool);
-            }
-        
-            addSkill(skill) {
-                this.skills.push(skill);
-            }
-        
-            interact(message) {
-                console.log(`${this.name} received the message: ${message}`);
-                
-                // Parse the message to identify potential actions or queries
-                const action = this.parseMessage(message);
-                
-                // Check if the agent has the necessary tools and skills
-                if (this.canHandleAction(action)) {
-                    // Perform the action
-                    return this.performAction(action);
-                } else {
-                    // If the agent can't handle the action, delegate or ask for help
-                    return this.delegate(action);
-                }
-            }
-        
-            parseMessage(message) {
-                // Simple parsing logic - can be expanded for more complex scenarios
-                const lowercaseMessage = message.toLowerCase();
-                if (lowercaseMessage.includes('calculate')) {
-                    return { type: 'calculation', content: message };
-                } else if (lowercaseMessage.includes('find') || lowercaseMessage.includes('search')) {
-                    return { type: 'search', content: message };
-                } else {
-                    return { type: 'conversation', content: message };
-                }
-            }
-        
-            canHandleAction(action) {
-                // Check if the agent has the necessary tools and skills for the action
-                const requiredTool = this.tools.find(tool => tool.canHandle(action.type));
-                const requiredSkill = this.skills.find(skill => skill.canHandle(action.type));
-                return requiredTool && requiredSkill;
-            }
-        
-            performAction(action) {
-                const tool = this.tools.find(tool => tool.canHandle(action.type));
-                const skill = this.skills.find(skill => skill.canHandle(action.type));
-                
-                if (tool && skill) {
-                    console.log(`${this.name} is performing ${action.type} action`);
-                    return skill.use(tool, action.content);
-                }
-            }
-        
-            delegate(action) {
-                console.log(`${this.name} cannot handle ${action.type} action. Delegating...`);
-                return `I'm sorry, I don't have the capability to ${action.type}. Let me find someone who can help.`;
-            }
-        }
-        
-        // Example Tool and Skill classes to work with the Agent
-        class Tool {
-            constructor(name, type) {
-                this.name = name;
-                this.type = type;
-            }
-        
-            canHandle(actionType) {
-                return this.type === actionType;
-            }
-        }
-        
-        class Skill {
-            constructor(name, type, action) {
-                this.name = name;
-                this.type = type;
-                this.action = action;
-            }
-        
-            canHandle(actionType) {
-                return this.type === actionType;
-            }
-        
-            use(tool, content) {
-                return this.action(tool, content);
-            }
-        }
-        return `${this.name} received the message: ${message}`;
+    removeTool(toolName) {
+        this.tools = this.tools.filter(tool => tool.name !== toolName);
     }
+
+    removeSkill(skillName) {
+        this.skills = this.skills.filter(skill => skill.name !== skillName);
+    }
+
+    updateTool(oldToolName, newTool) {
+        const toolIndex = this.tools.findIndex(tool => tool.name === oldToolName);
+        if (toolIndex !== -1) {
+            this.tools[toolIndex] = newTool;
+        }
+    }
+
+    updateSkill(oldSkillName, newSkill) {
+        const skillIndex = this.skills.findIndex(skill => skill.name === oldSkillName);
+        if (skillIndex !== -1) {
+            this.skills[skillIndex] = newSkill;
+        }
+    }
+
+    interact(message) {
+        console.log(`${this.name} received the message: ${message}`);
+        
+        // Parse the message to identify potential actions or queries
+        const action = this.parseMessage(message);
+        
+        // Check if the agent has the necessary tools and skills
+        if (this.canHandleAction(action)) {
+            // Perform the action
+            return this.performAction(action);
+        } else {
+            // If the agent can't handle the action, delegate or ask for help
+            return this.delegate(action);
+        }
+    }
+
+    parseMessage(message) {
+        // Simple parsing logic - can be expanded for more complex scenarios
+        const lowercaseMessage = message.toLowerCase();
+        if (lowercaseMessage.includes('calculate')) {
+            return { type: 'calculation', content: message };
+        } else if (lowercaseMessage.includes('find') || lowercaseMessage.includes('search')) {
+            return { type: 'search', content: message };
+        } else {
+            return { type: 'conversation', content: message };
+        }
+    }
+
+    canHandleAction(action) {
+        // Check if the agent has the necessary tools and skills for the action
+        const requiredTool = this.tools.find(tool => tool.canHandle(action.type));
+        const requiredSkill = this.skills.find(skill => skill.canHandle(action.type));
+        return requiredTool && requiredSkill;
+    }
+
+    performAction(action) {
+        const tool = this.tools.find(tool => tool.canHandle(action.type));
+        const skill = this.skills.find(skill => skill.canHandle(action.type));
+        
+        if (tool && skill) {
+            console.log(`${this.name} is performing ${action.type} action`);
+            return skill.use(tool, action.content);
+        }
+    }
+
+    delegate(action) {
+        console.log(`${this.name} cannot handle ${action.type} action. Delegating...`);
+        return `I'm sorry, I don't have the capability to ${action.type}. Let me find someone who can help.`;
+    }
+}
+
+// Example Tool and Skill classes to work with the Agent
+class Tool {
+    constructor(name, type) {
+        this.name = name;
+        this.type = type;
+    }
+
+    canHandle(actionType) {
+        return this.type === actionType;
+    }
+}
+
+class Skill {
+    constructor(name, type, action) {
+        this.name = name;
+        this.type = type;
+        this.action = action;
+    }
+
+    canHandle(actionType) {
+        return this.type === actionType;
+    }
+
+    use(tool, content) {
+        return this.action(tool, content);
+    }
+}
+
+// Save agentic frameworks to local storage
+function saveAgenticFramework(agent) {
+    const frameworks = JSON.parse(localStorage.getItem("agenticFrameworks")) || [];
+    frameworks.push(agent);
+    localStorage.setItem("agenticFrameworks", JSON.stringify(frameworks));
+}
+
+// Load agentic frameworks from local storage
+function loadAgenticFrameworks() {
+    return JSON.parse(localStorage.getItem("agenticFrameworks")) || [];
 }
 
 //functions
@@ -962,6 +977,22 @@ function addToolToAgent(agent, tool) {
 
 function addSkillToAgent(agent, skill) {
     agent.addSkill(skill);
+}
+
+function removeToolFromAgent(agent, toolName) {
+    agent.removeTool(toolName);
+}
+
+function removeSkillFromAgent(agent, skillName) {
+    agent.removeSkill(skillName);
+}
+
+function updateToolInAgent(agent, oldToolName, newTool) {
+    agent.updateTool(oldToolName, newTool);
+}
+
+function updateSkillInAgent(agent, oldSkillName, newSkill) {
+    agent.updateSkill(oldSkillName, newSkill);
 }
 
 function agentInteraction(agent, message) {
